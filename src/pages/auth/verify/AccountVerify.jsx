@@ -44,7 +44,7 @@ function AccountVerify() {
       let config = {
         method: "put",
         maxBodyLength: Infinity,
-        url: "http://localhost:8000/api/v4/auth/user/create",
+        url: "https://backend-mernian-yxi0.onrender.com/api/v4/auth/user/create",
         headers: {
           Authorization: "user",
           "Content-Type": "application/json",
