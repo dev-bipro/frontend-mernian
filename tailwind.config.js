@@ -21,6 +21,9 @@ export default {
       borderWidth: {
         10: "10px",
       },
+      lineHeight: {
+        20: "80px",
+      },
     },
   },
   plugins: [],

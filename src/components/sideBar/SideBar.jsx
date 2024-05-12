@@ -108,7 +108,10 @@ function SideBar() {
           </div>
           <div className="absolute bottom-0 left-1/2 border-4  translate-y-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-gray-600 bg-no-repeat bg-cover bg-top overflow-hidden cursor-pointer group ease-linear transition duration-300">
             <Image
-              src={loginUser.profilePic.image || loginUser.profilePicAvatar}
+              src={
+                `http://localhost:8000${loginUser?.profilePic?.image}` ||
+                loginUser?.profilePicAvatar
+              }
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white hidden group-hover:block ease-linear transition duration-300 text-center font-Poppins text-xs  text-grayColor">
@@ -272,7 +275,10 @@ function SideBar() {
           {popupShow == "viewImage" ? (
             <div className="w-96 h-96">
               <Image
-                src={loginUser.profilePic.image || loginUser.profilePicAvatar}
+                src={
+                  `http://localhost:8000${loginUser?.profilePic?.image}` ||
+                  loginUser.profilePicAvatar
+                }
               />
             </div>
           ) : popupShow == "changeImage" ? (

@@ -1,7 +1,8 @@
-function Label({ htmlFor, className, title }) {
+function Label({ htmlFor, className, title, children }) {
   return (
     <label htmlFor={htmlFor} className={className}>
       {title}
+      {children}
     </label>
   );
 }

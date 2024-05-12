@@ -1,4 +1,13 @@
-function Input({ id, className, name, onChange, type, value, placeholder }) {
+function Input({
+  id,
+  className,
+  name,
+  onChange,
+  type,
+  value,
+  placeholder,
+  accept,
+}) {
   return (
     <>
       <input
@@ -9,6 +18,7 @@ function Input({ id, className, name, onChange, type, value, placeholder }) {
         type={type}
         defaultValue={value}
         placeholder={placeholder}
+        accept={accept}
       />
     </>
   );

@@ -6,7 +6,7 @@ import NavBar from "./navBar/NavBar";
 function RootLayout() {
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <Flex className="flex gap-5">
         <div className="w-1/5 text-white">
           <SideBar />
