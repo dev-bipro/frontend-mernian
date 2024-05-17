@@ -10,11 +10,18 @@ import "react-html5-camera-photo/build/css/index.css";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Flex from "../../components/Flex";
+import { Bounce, toast } from "react-toastify";
+import axios from "axios";
+import Form from "../../components/Form";
+import FormData from "form-data";
 
 function Home() {
   const loginUser = useSelector((state) => state.loginUser.value);
   const navigate = useNavigate();
   const [popupShow, setPopupShow] = useState(true);
+  const [text, setText] = useState("");
+  const [image, setImage] = useState("");
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     if (!loginUser) {
@@ -22,27 +29,90 @@ function Home() {
     }
   }, []);
 
-  function handleTakePhoto(dataUri) {
+  const handleTakePhoto = (dataUri) => {
     // Do stuff with the photo...
-    console.log("takePhoto", dataUri);
-  }
+    // console.log("takePhoto", dataUri);
+    setImage(dataUri);
+  };
 
-  function handleTakePhotoAnimationDone(dataUri) {
+  const handleTakePhotoAnimationDone = (dataUri) => {
     // Do stuff with the photo...
-    console.log("takePhoto", dataUri);
-  }
+    // console.log("takePhoto", dataUri);
+  };
 
-  function handleCameraError(error) {
+  const handleCameraError = (error) => {
     console.log("handleCameraError", error);
-  }
+  };
 
-  function handleCameraStart(stream) {
+  const handleCameraStart = (stream) => {
     console.log("handleCameraStart");
-  }
+  };
 
-  function handleCameraStop() {
+  const handleCameraStop = () => {
     console.log("handleCameraStop");
-  }
+  };
+  const changeHandler = (e) => {
+    console.log(e.target.type);
+    if (e.target.type == "file" && files.length < 13) {
+      setFiles([...files, e.target.files[0]]);
+    } else if (e.target.type == "textarea") {
+      setText(e.target.value);
+    }
+    console.log(text);
+  };
+  const discardHandler = () => {
+    setImage("");
+    setFiles([]);
+    setText("");
+    // console.log(image, files, text);
+  };
+  const postHandler = (e) => {
+    e.preventDefault();
+    console.log(files);
+    if (!image && files.length <= 0 && !text) {
+      toast.error("You Have No Post Item 🤷‍♂️", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    } else {
+      const data = new FormData();
+      // let newArr = [];
+      Object.values(files).forEach((file) => {
+        data.append("images", file);
+      });
+      data.append("text", text);
+      data.append("image", image);
+      // data.append("images", newArr);
+      console.log(Object.values(files));
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://localhost:8000/api/v4/post/create",
+        data: data,
+        headers: {
+          Authorization: "user",
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          // console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   return (
     <>
       <section>
@@ -55,44 +125,47 @@ function Home() {
             />
           </div>
           {/* <Form> */}
-          <textarea
-            // onChange={changeHandler}
-            name="newPostTextInp"
-            className="w-full text-gray-600 border-b-2 border-gray-600 p-3"
-            type="text"
-            placeholder={`hi, ${loginUser.name}, share your post ...`}
-            // value={inpValue}
-            cols="150"
-            rows="5"
-          />
-          <Flex className="flex justify-between items-center mb-5">
-            <Flex className="ml-3 flex gap-x-2">
-              <div onClick={() => setPopupShow(false)}>
-                <IoCameraReverse className="text-2xl cursor-pointer" />
-              </div>
-              <Label className="newPostPicBtnDiv">
-                <AiFillPicture className="text-2xl cursor-pointer" />
-                <Input
-                  // onChange={changeHandler}
-                  name="imageAndVideoInp"
-                  className={"hidden"}
-                  type="file"
-                  accept="image/*, video/*"
+          <Form Form onSubmit={postHandler}>
+            <textarea
+              onChange={changeHandler}
+              name="newPostTextInp"
+              className="w-full text-gray-600 border-b-2 border-gray-600 p-3"
+              placeholder={`hi, ${loginUser.name}, share your post ...`}
+              value={text}
+              cols="150"
+              rows="5"
+            />
+            <Flex className="flex justify-between items-center mb-5">
+              <Flex className="ml-3 flex gap-x-2">
+                <div onClick={() => setPopupShow(false)}>
+                  <IoCameraReverse className="text-2xl cursor-pointer" />
+                </div>
+                <Label className="newPostPicBtnDiv">
+                  <AiFillPicture className="text-2xl cursor-pointer" />
+                  <Input
+                    onChange={changeHandler}
+                    name="images"
+                    className={"hidden"}
+                    type="file"
+                    accept="image/*, video/*"
+                  />
+                </Label>
+                <Button />
+              </Flex>
+              <Flex className="flex gap-4 mr-3">
+                <Button
+                  onClick={discardHandler}
+                  className="px-12 py-3 rounded-lg bg-slate-300 hover:bg-mainColor capitalize font-Poppins font-semibold text-base text-text-gray-600 hover:text-white"
+                  title="discard"
                 />
-              </Label>
-              <Button />
+                <Button
+                  type="submit"
+                  className="px-12 py-3 rounded-lg bg-secondoryColor hover:bg-slate-300 capitalize font-Poppins font-semibold text-base text-white hover:text-secondoryColor"
+                  title="post"
+                />
+              </Flex>
             </Flex>
-            <Flex className="flex gap-4 mr-3">
-              <Button
-                className="px-12 py-3 rounded-lg bg-slate-300 hover:bg-mainColor capitalize font-Poppins font-semibold text-base text-text-gray-600 hover:text-white"
-                title="discard"
-              />
-              <Button
-                className="px-12 py-3 rounded-lg bg-secondoryColor hover:bg-slate-300 capitalize font-Poppins font-semibold text-base text-white hover:text-secondoryColor"
-                title="post"
-              />
-            </Flex>
-          </Flex>
+          </Form>
           {/* </Form> */}
         </div>
         {!popupShow && (

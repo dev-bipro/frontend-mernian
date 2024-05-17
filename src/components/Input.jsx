@@ -19,6 +19,7 @@ function Input({
         defaultValue={value}
         placeholder={placeholder}
         accept={accept}
+        // multiple
       />
     </>
   );

@@ -1,7 +1,7 @@
-function Paragraph({ className, title, children }) {
+function Paragraph({ onClick, className, title, children }) {
   return (
     <>
-      <p className={className}>
+      <p onClick={onClick} className={className}>
         {title}
         {children}
       </p>

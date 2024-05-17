@@ -20,15 +20,21 @@ import { CircleStencil, Cropper } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import axios from "axios";
 import { setLogin } from "../../features/user/loginUserSlice";
+import { io } from "socket.io-client";
 
 function SideBar() {
   const loginUser = useSelector((state) => state.loginUser.value);
   const dispatch = useDispatch();
+  const socket = io("http://localhost:8000");
 
   const [popupShow, setPopupShow] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [chooseImage, setChooseImage] = useState("");
   const [image, setImage] = useState(null);
+
+  // useEffect(()=>{
+  //   if()
+  // },[])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -94,6 +100,13 @@ function SideBar() {
         navigate("/newsfeed");
       }
     });
+  };
+
+  const logOutHandler = () => {
+    localStorage.removeItem("user");
+    dispatch(setLogin(null));
+    socket.on("disconnect", onDisconnect);
+    navigate("/");
   };
 
   return (
@@ -258,6 +271,7 @@ function SideBar() {
               <RiLogoutBoxFill />
             </span>
             <Paragraph
+              onClick={logOutHandler}
               className="pl-7 capitalize font-Poppins font-semibold text-grayColor group-hover:text-white transition duration-300"
               title="log out"
             />

@@ -16,9 +16,11 @@ import { BsEye } from "react-icons/bs";
 import { BsEyeSlash } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogin } from "../../../features/user/loginUserSlice";
+import { io } from "socket.io-client";
 
 function Login() {
   const loginUser = useSelector((state) => state.loginUser.value);
+  const socket = io("http://localhost:8000");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -34,6 +36,7 @@ function Login() {
     if (loginUser) {
       navigate("/newsfeed");
     }
+    // console.log(socket);
   }, []);
 
   const changeHandler = (e) => {
@@ -89,6 +92,7 @@ function Login() {
             // console.log(JSON.stringify(response.data));
             console.log(response.data);
             if (response.status == 200) {
+              socket.emit("online", { userId: response.data.data._id });
               toast.success(response.data.message, {
                 position: "top-right",
                 autoClose: 5000,
