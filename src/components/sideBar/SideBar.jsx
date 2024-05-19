@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaNewspaper, FaUserFriends, FaHandHoldingHeart } from "react-icons/fa";
 import { IoIosContact, IoMdPhotos } from "react-icons/io";
 import { RiFolderVideoFill, RiLogoutBoxFill } from "react-icons/ri";
-import { FaLayerGroup } from "react-icons/fa6";
+import { FaLayerGroup, FaUsers } from "react-icons/fa6";
 import { MdOutlineClose } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import { CircleStencil, Cropper } from "react-advanced-cropper";
@@ -241,6 +241,17 @@ function SideBar() {
                 <IoMdPhotos />
               </span>
               <span className="pl-7">photos</span>
+            </Link>
+          </ListItem>
+          <ListItem className="mb-2">
+            <Link
+              className=" px-5 py-3 rounded-xl flex items-center capitalize font-Poppins font-semibold text-grayColor cursor-pointer hover:bg-gray-600 hover:text-white group transition duration-300"
+              to="/users"
+            >
+              <span>
+                <FaUsers />
+              </span>
+              <span className="pl-7">users</span>
             </Link>
           </ListItem>
           <ListItem className="mb-2">

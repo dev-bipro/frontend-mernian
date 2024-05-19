@@ -11,6 +11,7 @@ import Login from "./pages/auth/login/Login";
 import AccountVerify from "./pages/auth/verify/AccountVerify";
 import Home from "./pages/home/Home";
 import RootLayout from "./components/RootLayout";
+import Users from "./pages/users/Users";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,6 +22,7 @@ function App() {
         <Route path="/verify/:email" element={<AccountVerify />}></Route>
         <Route element={<RootLayout />}>
           <Route path="/newsfeed" element={<Home />}></Route>
+          <Route path="/users" element={<Users />}></Route>
           {/* <Route path="/home" element={<Home/>} />
                 <Route path="/message" element={<Message />} />
                 <Route path="/notification" element={<Notification />} />

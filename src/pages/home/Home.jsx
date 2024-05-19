@@ -14,6 +14,11 @@ import { Bounce, toast } from "react-toastify";
 import axios from "axios";
 import Form from "../../components/Form";
 import FormData from "form-data";
+import Image from "../../components/Image";
+import List from "../../components/List";
+import ListItem from "../../components/ListItem";
+import Video from "../../components/Video";
+import { MdOutlineClose } from "react-icons/md";
 
 function Home() {
   const loginUser = useSelector((state) => state.loginUser.value);
@@ -33,38 +38,23 @@ function Home() {
     // Do stuff with the photo...
     // console.log("takePhoto", dataUri);
     setImage(dataUri);
+    setPopupShow(true);
   };
 
-  const handleTakePhotoAnimationDone = (dataUri) => {
-    // Do stuff with the photo...
-    // console.log("takePhoto", dataUri);
-  };
-
-  const handleCameraError = (error) => {
-    console.log("handleCameraError", error);
-  };
-
-  const handleCameraStart = (stream) => {
-    console.log("handleCameraStart");
-  };
-
-  const handleCameraStop = () => {
-    console.log("handleCameraStop");
-  };
   const changeHandler = (e) => {
-    console.log(e.target.type);
     if (e.target.type == "file" && files.length < 13) {
       setFiles([...files, e.target.files[0]]);
     } else if (e.target.type == "textarea") {
       setText(e.target.value);
     }
-    console.log(text);
+  };
+  const deleteSelectFileHandler = (index) => {
+    setFiles((item) => [...item.slice(0, index), ...item.slice(index + 1)]);
   };
   const discardHandler = () => {
     setImage("");
     setFiles([]);
     setText("");
-    // console.log(image, files, text);
   };
   const postHandler = (e) => {
     e.preventDefault();
@@ -84,6 +74,8 @@ function Home() {
     } else {
       const data = new FormData();
       // let newArr = [];
+
+      data.append("ownerId", loginUser._id);
       Object.values(files).forEach((file) => {
         data.append("images", file);
       });
@@ -105,18 +97,21 @@ function Home() {
       axios
         .request(config)
         .then((response) => {
-          // console.log(JSON.stringify(response.data));
+          console.log(JSON.stringify(response.data));
         })
         .catch((error) => {
           console.log(error);
         });
+      setImage("");
+      setFiles([]);
+      setText("");
     }
   };
 
   return (
     <>
       <section>
-        <div className="rounded-3xl overflow-hidden shadow-md">
+        <div className="rounded-sm overflow-hidden shadow-md">
           <div className="w-full h-20 text-center bg-gray-600">
             <Heading
               className="capitalize font-semibold text-4xl text-white leading-20"
@@ -169,17 +164,15 @@ function Home() {
           {/* </Form> */}
         </div>
         {!popupShow && (
-          <div>
-            <Button onClick={() => setPopupShow(true)} title="close" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2">
+            <Button
+              onClick={() => setPopupShow(true)}
+              className="px-3 py-2 bg-red-600 capitalize rounded-sm text-white mb-2"
+              title="close"
+            />
             <Camera
               onTakePhoto={(dataUri) => {
                 handleTakePhoto(dataUri);
-              }}
-              onTakePhotoAnimationDone={(dataUri) => {
-                handleTakePhotoAnimationDone(dataUri);
-              }}
-              onCameraError={(error) => {
-                handleCameraError(error);
               }}
               idealFacingMode={FACING_MODES.ENVIRONMENT}
               idealResolution={{ width: 640, height: 480 }}
@@ -191,13 +184,56 @@ function Home() {
               isDisplayStartCameraError={true}
               isFullscreen={false}
               sizeFactor={1}
-              onCameraStart={(stream) => {
-                handleCameraStart(stream);
-              }}
-              onCameraStop={() => {
-                handleCameraStop();
-              }}
             />
+          </div>
+        )}
+        {(image || files.length > 0) && (
+          <div>
+            <div className="w-96 relative">
+              <div
+                onClick={() => setImage("")}
+                className="absolute top-3 right-3 text-grayColor font-bold text-xl cursor-pointer text-red-600 hover:text-white hover:bg-red-600"
+              >
+                <MdOutlineClose />
+              </div>
+              <Image className="w-full" src={image} />
+            </div>
+            <List className="flex flex-wrap gap-3">
+              {files.map((item, index) => {
+                if (item.type.split("/")[0] == "image") {
+                  return (
+                    <ListItem className="w-96 h-72 overflow-hidden relative py-8">
+                      <div
+                        onClick={() => deleteSelectFileHandler(index)}
+                        className="absolute top-3 right-3 text-grayColor font-bold text-xl cursor-pointer text-red-600 hover:text-white hover:bg-red-600"
+                      >
+                        <MdOutlineClose />
+                      </div>
+                      <Image
+                        className="h-fit object-fill"
+                        src={URL.createObjectURL(item)}
+                      />
+                    </ListItem>
+                  );
+                } else if (item.type.split("/")[0] == "video") {
+                  return (
+                    <ListItem className="w-96 h-72 relative flex justify-center items-center">
+                      <div
+                        onClick={() => deleteSelectFileHandler(index)}
+                        className="absolute top-3 right-3 text-grayColor font-bold text-xl cursor-pointer text-red-600 hover:text-white hover:bg-red-600"
+                      >
+                        <MdOutlineClose />
+                      </div>
+                      <Video
+                        width="100%"
+                        src={URL.createObjectURL(item)}
+                        type="video/mp4"
+                      />
+                    </ListItem>
+                  );
+                }
+              })}
+            </List>
           </div>
         )}
       </section>
