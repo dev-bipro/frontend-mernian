@@ -17,6 +17,7 @@ export default {
       spacing: {
         // "20%": "20%",
         container: "1628px",
+        4: "16px",
       },
       borderWidth: {
         10: "10px",

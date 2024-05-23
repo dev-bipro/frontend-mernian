@@ -115,7 +115,10 @@ function SideBar() {
         <div className="relative mb-20">
           <div className="w-full bg-gray-600 h-20">
             <Image
-              src={loginUser.coverPic}
+              src={
+                `http://localhost:8000${loginUser?.coverPic?.image}` ||
+                loginUser.coverPicAvatar
+              }
               className="w-full h-full object-cover"
             />
           </div>
