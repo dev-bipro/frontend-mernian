@@ -3,14 +3,15 @@ import Image from "../Image";
 import Paragraph from "../Paragraph";
 
 function UserList({ user, children }) {
-  console.log(user);
+  // console.log(user);
+  const profilePicUrl = user?.profilePic?.image
+    ? `http://localhost:8000${user.profilePic.image}`
+    : user.profilePicAvatar;
+
   return (
     <div className="w-44 p-4 shadow-md overflow-hidden">
       <div className="w-40 h-40 bg-gray-600 bg-no-repeat bg-cover bg-top overflow-hidden">
-        <Image
-          className="w-full h-full bg-cover"
-          src={user?.profilePic || user?.profilePicAvatar}
-        />
+        <Image className="w-full h-full bg-cover" src={profilePicUrl} />
       </div>
       <div>
         <Heading

@@ -24,6 +24,12 @@ import { io } from "socket.io-client";
 
 function SideBar() {
   const loginUser = useSelector((state) => state.loginUser.value);
+  const coverPicUrl =
+    `http://localhost:8000${loginUser?.coverPic?.image}` ||
+    loginUser.coverPicAvatar;
+  const profilePicUrl =
+    `http://localhost:8000${loginUser?.profilePic?.image}` ||
+    loginUser.coverPicAvatar;
   const dispatch = useDispatch();
   const socket = io("http://localhost:8000");
 
@@ -114,22 +120,10 @@ function SideBar() {
       <section>
         <div className="relative mb-20">
           <div className="w-full bg-gray-600 h-20">
-            <Image
-              src={
-                `http://localhost:8000${loginUser?.coverPic?.image}` ||
-                loginUser.coverPicAvatar
-              }
-              className="w-full h-full object-cover"
-            />
+            <Image src={coverPicUrl} className="w-full h-full object-cover" />
           </div>
           <div className="absolute bottom-0 left-1/2 border-4  translate-y-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-gray-600 bg-no-repeat bg-cover bg-top overflow-hidden cursor-pointer group ease-linear transition duration-300">
-            <Image
-              src={
-                `http://localhost:8000${loginUser?.profilePic?.image}` ||
-                loginUser?.profilePicAvatar
-              }
-              className="w-full h-full object-cover"
-            />
+            <Image src={profilePicUrl} className="w-full h-full object-cover" />
             <div className="absolute bottom-0 left-0 w-full h-1/2 bg-white hidden group-hover:block ease-linear transition duration-300 text-center font-Poppins text-xs  text-grayColor">
               <Button
                 onClick={() => setPopupShow("viewImage")}
