@@ -101,7 +101,15 @@ function Users() {
           .request(config)
           .then((response) => {
             // console.log(JSON.stringify(response.data));
-            setFriendsList(response.data.data);
+            const arr = [];
+            response.data.data.map((item) => {
+              if (!item.userOne) {
+                arr.push({ key: item._id, ...item.userTwo });
+              } else {
+                arr.push({ key: item._id, ...item.userOne });
+              }
+            });
+            setFriendsList(arr);
           })
           .catch((error) => {
             console.log(error);
@@ -203,6 +211,7 @@ function Users() {
         });
     }
   };
+
   return (
     <>
       <div className="flex gap-8 flex-wrap">
@@ -210,7 +219,7 @@ function Users() {
           return (
             <UserList key={index} user={item}>
               {sendFriendRequestList.find(
-                (el) => el.receiver._id == item._id
+                (el) => el.receiver?._id == item?._id
               ) ? (
                 <Button
                   className="w-full py-1 bg-sky-300 hover:bg-red-300 rounded-sm capitalize font-Poppins font-semibold text-gray-600 mb-1"
@@ -223,14 +232,11 @@ function Users() {
                   onClick={() => acceptFriendRequest(item._id)}
                   title="accept"
                 />
-              ) : friendsList.find(
-                  (el) =>
-                    el.userOne._id == item._id || el.userTwo._id == item._id
-                ) ? (
+              ) : friendsList.find((el) => el._id === item._id) ? (
                 <Button
                   className="w-full py-1 bg-sky-300 hover:bg-green-300 rounded-sm capitalize font-Poppins font-semibold text-gray-600 mb-1"
                   onClick={() => acceptFriendRequest(item._id)}
-                  title="block"
+                  title="friend"
                 />
               ) : (
                 <Button

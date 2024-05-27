@@ -12,6 +12,8 @@ import AccountVerify from "./pages/auth/verify/AccountVerify";
 import Home from "./pages/home/Home";
 import RootLayout from "./components/RootLayout";
 import Users from "./pages/users/Users";
+import Friends from "./pages/friends/Friends";
+import FriendRequest from "./pages/friendRequest/FriendRequest";
 
 function App() {
   const router = createBrowserRouter(
@@ -23,6 +25,8 @@ function App() {
         <Route element={<RootLayout />}>
           <Route path="/newsfeed" element={<Home />}></Route>
           <Route path="/users" element={<Users />}></Route>
+          <Route path="/friends" element={<Friends />}></Route>
+          <Route path="/friend-request" element={<FriendRequest />}></Route>
           {/* <Route path="/home" element={<Home/>} />
                 <Route path="/message" element={<Message />} />
                 <Route path="/notification" element={<Notification />} />
